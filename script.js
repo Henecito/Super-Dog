@@ -14,6 +14,7 @@ const scrollSpeed = 8;
 const jumpHeight = 100;
 let isMoving = false;
 let isJumping = false;
+let scrollInterval;
 
 mapImage.style.backgroundRepeat = 'repeat-x';
 
@@ -39,7 +40,7 @@ document.addEventListener('keydown', (e) => {
     characterLeft -= scrollSpeed;
     scrollPosition -= scrollSpeed;
     isMoving = true;
-  } else if (e.key === 'ArrowUp') {
+  } else if (e.key === 'ArrowUp' && !isJumping) {
     jump();
   }
 
@@ -56,6 +57,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 function jump() {
+  isJumping = true;
   let jumpDistance = 0;
   const jumpSpeed = 7;
 
@@ -98,4 +100,21 @@ function resetCharacterPosition() {
   character.style.bottom = characterBottom + 'px';
 }
 
+function startAutoScroll() {
+  scrollInterval = setInterval(() => {
+    if (isMoving) {
+      scrollPosition += scrollSpeed;
+      if (scrollPosition > imageWidth) {
+        scrollPosition = 0;
+      }
+      updateBackgroundPosition();
+    }
+  }, 100); 
+}
+
+function stopAutoScroll() {
+  clearInterval(scrollInterval);
+}
+
 resetCharacterPosition();
+startAutoScroll();
