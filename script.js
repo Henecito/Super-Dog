@@ -10,7 +10,9 @@ const characterHeight = character.offsetHeight;
 let scrollPosition = 0;
 let characterLeft = 0;
 let characterBottom = 0;
-const scrollSpeed = 8;
+let scrollSpeed = 8;
+let jumpSpeed = 7;
+let fallSpeed = 5;
 const jumpHeight = 100;
 let isMoving = false;
 let isJumping = false;
@@ -59,7 +61,6 @@ document.addEventListener('keydown', (e) => {
 function jump() {
   isJumping = true;
   let jumpDistance = 0;
-  const jumpSpeed = 7;
 
   function animateJump() {
     if (jumpDistance < jumpHeight) {
@@ -76,8 +77,6 @@ function jump() {
 }
 
 function fall() {
-  const fallSpeed = 5;
-
   function animateFall() {
     if (characterBottom > 0) {
       characterBottom -= fallSpeed;
@@ -100,6 +99,24 @@ function resetCharacterPosition() {
   character.style.bottom = characterBottom + 'px';
 }
 
+let speedIncreaseInterval;
+const speedIncreaseRate = 2;
+const speedIncreaseAmount = 0.5;
+
+function increaseSpeed() {
+  scrollSpeed += speedIncreaseAmount;
+  jumpSpeed += speedIncreaseAmount;
+  fallSpeed += speedIncreaseAmount;
+}
+
+function startSpeedIncreaseTimer() {
+  speedIncreaseInterval = setInterval(() => {
+    increaseSpeed();
+  }, speedIncreaseRate * 1000);
+}
+
+startSpeedIncreaseTimer();
+
 function startAutoScroll() {
   scrollInterval = setInterval(() => {
     if (isMoving) {
@@ -109,7 +126,7 @@ function startAutoScroll() {
       }
       updateBackgroundPosition();
     }
-  }, 100); 
+  }, 30);
 }
 
 function stopAutoScroll() {
